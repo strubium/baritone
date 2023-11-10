@@ -27,6 +27,8 @@ import baritone.behavior.LookBehavior;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.item.ItemElytra;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -61,31 +63,14 @@ public class MixinEntityPlayerSP {
             method = "onUpdate",
             at = @At(
                     value = "INVOKE",
-                    target = "net/minecraft/client/entity/EntityPlayerSP.isRiding()Z",
-                    shift = At.Shift.BY,
-                    by = -3
+                    target = "net/minecraft/client/entity/AbstractClientPlayer.onUpdate()V",
+                    shift = At.Shift.AFTER
             )
     )
     private void onPreUpdate(CallbackInfo ci) {
         IBaritone baritone = BaritoneAPI.getProvider().getBaritoneForPlayer((EntityPlayerSP) (Object) this);
         if (baritone != null) {
             baritone.getGameEventHandler().onPlayerUpdate(new PlayerUpdateEvent(EventState.PRE));
-        }
-    }
-
-    @Inject(
-            method = "onUpdate",
-            at = @At(
-                    value = "INVOKE",
-                    target = "net/minecraft/client/entity/EntityPlayerSP.onUpdateWalkingPlayer()V",
-                    shift = At.Shift.BY,
-                    by = 2
-            )
-    )
-    private void onPostUpdate(CallbackInfo ci) {
-        IBaritone baritone = BaritoneAPI.getProvider().getBaritoneForPlayer((EntityPlayerSP) (Object) this);
-        if (baritone != null) {
-            baritone.getGameEventHandler().onPlayerUpdate(new PlayerUpdateEvent(EventState.POST));
         }
     }
 
@@ -139,5 +124,20 @@ public class MixinEntityPlayerSP {
         if (baritone != null) {
             ((LookBehavior) baritone.getLookBehavior()).pig();
         }
+    }
+
+    @Redirect(
+            method = "onLivingUpdate",
+            at = @At(
+                    value = "INVOKE",
+                    target = "net/minecraft/item/ItemElytra.isUsable(Lnet/minecraft/item/ItemStack;)Z"
+            )
+    )
+    private boolean isElytraUsable(ItemStack stack) {
+        IBaritone baritone = BaritoneAPI.getProvider().getBaritoneForPlayer((EntityPlayerSP) (Object) this);
+        if (baritone != null && baritone.getPathingBehavior().isPathing()) {
+            return false;
+        }
+        return ItemElytra.isUsable(stack);
     }
 }
