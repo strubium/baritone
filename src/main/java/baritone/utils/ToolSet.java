@@ -153,6 +153,10 @@ public class ToolSet {
                     lowestCost = cost;
                     bestSilkTouch = silkTouch;
                     bestFortune = fortune;
+                    fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack);
+                    if (fortune < bestFortune) {
+                        best = i;
+                    }
                 }
             }
         }
