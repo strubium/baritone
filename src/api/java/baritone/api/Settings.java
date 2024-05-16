@@ -162,6 +162,10 @@ public final class Settings {
      */
     public final Setting<Boolean> assumeSafeWalk = new Setting<>(false);
 
+
+
+    public final Setting<Boolean>  placeCraftingTable = new Setting<>(false);
+
     /**
      * If true, parkour is allowed to make jumps when standing on blocks at the maximum height, so player feet is y=256
      * <p>
