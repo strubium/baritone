@@ -124,7 +124,6 @@ public class ToolSet {
         int lowestCost = Integer.MIN_VALUE;
         boolean bestSilkTouch = false;
         int bestFortune = Integer.MIN_VALUE;
-        boolean isCrop = b instanceof CropBlock;
         IBlockState blockState = b.getDefaultState();
         for (int i = 0; i < 9; i++) {
             ItemStack itemStack = player.inventory.getStackInSlot(i);
