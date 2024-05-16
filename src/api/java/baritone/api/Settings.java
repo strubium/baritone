@@ -162,8 +162,9 @@ public final class Settings {
      */
     public final Setting<Boolean> assumeSafeWalk = new Setting<>(false);
 
-
-
+    /**
+     * If true, and the bot has a crafting table in its inventory, place down a crafting table when trying to craft
+     */
     public final Setting<Boolean>  placeCraftingTable = new Setting<>(false);
 
     /**
@@ -210,7 +211,11 @@ public final class Settings {
             Item.getItemFromBlock(Blocks.DIRT),
             Item.getItemFromBlock(Blocks.COBBLESTONE),
             Item.getItemFromBlock(Blocks.NETHERRACK),
-            Item.getItemFromBlock(Blocks.STONE)
+            Item.getItemFromBlock(Blocks.STONE),
+            Item.getItemFromBlock(Blocks.CRAFTING_TABLE),
+            Item.getItemFromBlock(Blocks.PLANKS),
+            Item.getItemFromBlock(Blocks.LEAVES),
+            Item.getItemFromBlock(Blocks.LEAVES2)
     )));
 
     /**

@@ -111,20 +111,21 @@ public class ToolSet {
 
     public int getBestSlot(Block b, boolean preferSilkTouch, boolean pathingCalculation) {
 
-        /*
-        If we actually want know what efficiency our held item has instead of the best one
-        possible, this lets us make pathing depend on the actual tool to be used (if auto tool is disabled)
-        */
+    /*
+    If we actually want to know what efficiency our held item has instead of the best one
+    possible, this lets us make pathing depend on the actual tool to be used (if auto tool is disabled)
+    */
         if (!Baritone.settings().autoTool.value && pathingCalculation) {
             return player.inventory.currentItem;
         }
 
         int best = 0;
         double highestSpeed = Double.NEGATIVE_INFINITY;
-        int lowestCost = Integer.MIN_VALUE;
+        int lowestCost = Integer.MAX_VALUE;
         boolean bestSilkTouch = false;
         int bestFortune = Integer.MIN_VALUE;
         IBlockState blockState = b.getDefaultState();
+
         for (int i = 0; i < 9; i++) {
             ItemStack itemStack = player.inventory.getStackInSlot(i);
             if (!Baritone.settings().useSwordToMine.value && itemStack.getItem() instanceof ItemSword) {
@@ -134,9 +135,11 @@ public class ToolSet {
             if (Baritone.settings().itemSaver.value && (itemStack.getItemDamage() + Baritone.settings().itemSaverThreshold.value) >= itemStack.getMaxDamage() && itemStack.getMaxDamage() > 1) {
                 continue;
             }
+
             double speed = calculateSpeedVsBlock(itemStack, blockState);
             boolean silkTouch = hasSilkTouch(itemStack);
             int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack);
+
             if (speed > highestSpeed) {
                 highestSpeed = speed;
                 best = i;
@@ -145,20 +148,25 @@ public class ToolSet {
                 bestFortune = fortune;
             } else if (speed == highestSpeed) {
                 int cost = getMaterialCost(itemStack);
-                if ((cost < lowestCost && (silkTouch || !bestSilkTouch)) ||
-                        (preferSilkTouch && !bestSilkTouch && silkTouch)) {
-                    highestSpeed = speed;
+
+                if (preferSilkTouch && !bestSilkTouch && silkTouch) {
                     best = i;
                     lowestCost = cost;
                     bestSilkTouch = silkTouch;
                     bestFortune = fortune;
-                    fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack);
-                    if (!(fortune < bestFortune)) {
+                } else if (silkTouch == bestSilkTouch) {
+                    if (cost < lowestCost) {
                         best = i;
+                        lowestCost = cost;
+                        bestFortune = fortune;
+                    } else if (cost == lowestCost && fortune > bestFortune) {
+                        best = i;
+                        bestFortune = fortune;
                     }
                 }
             }
         }
+
         return best;
     }
 
