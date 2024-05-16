@@ -273,6 +273,39 @@ public interface MovementHelper extends ActionCosts, Helper {
         return state.getBlock().isPassable(bsi.access, bsi.isPassableBlockPos.setPos(x, y, z));
     }
 
+    /**
+     * Do I have to sneak because im on a Magma block?
+     *
+     * @param ctx  IPlayerContext to access player position and inventory
+     * @param src  the block we are comming from
+     * @param dest the block we want to go to
+     * @return if we have to sneak to prevent magma damage
+     */
+    static boolean isOverMagma(IPlayerContext ctx, BetterBlockPos src, BetterBlockPos dest) {
+        int x = ctx.playerFeet().x;
+        int y = ctx.playerFeet().y;
+        int z = ctx.playerFeet().z;
+        BlockStateInterface bsi = new BlockStateInterface(ctx);
+
+        if (EnchantmentHelper.hasFrostWalkerEnchantment(ctx.player())) {        //if we are wearing frostwalker boots magma can go fuck itself
+            return false;
+        }
+        if (isOverMagma(bsi, x, y, z) || isOverMagma(bsi, dest.x, y, dest.z)) { //we are or going to stand on magma
+            return true;
+        }
+        if (isOverMagma(bsi, dest.x, dest.y, dest.z) && y < src.y) {            //we drop down on a magma block
+            return true;
+        }
+        if ((src.x != dest.x && src.z != dest.z)) {                             //we move diagonally
+            return isOverMagma(bsi, src.x, y, dest.z) || isOverMagma(bsi, dest.x, y, dest.z) || isOverMagma(bsi, dest.x, y, src.z); //over a magmablock
+        }
+        return false; //if we get this far there is no magma
+    }
+
+    static boolean isOverMagma(BlockStateInterface bsi, int x, int y, int z) {
+        return bsi.get0(x, y - 1, z).getBlock() == Blocks.MAGMA;
+    }
+
     static boolean isReplaceable(int x, int y, int z, IBlockState state, BlockStateInterface bsi) {
         // for MovementTraverse and MovementAscend
         // block double plant defaults to true when the block doesn't match, so don't need to check that case
@@ -356,7 +389,6 @@ public interface MovementHelper extends ActionCosts, Helper {
 
     static boolean avoidWalkingInto(Block block) {
         return block instanceof BlockLiquid
-                || block == Blocks.MAGMA
                 || block == Blocks.CACTUS
                 || block == Blocks.FIRE
                 || block == Blocks.END_PORTAL
@@ -375,7 +407,7 @@ public interface MovementHelper extends ActionCosts, Helper {
      * @param y     The block's y position
      * @param z     The block's z position
      * @param state The state of the block at the specified location
-     * @return Whether or not the specified block can be walked on
+     * @return Whether the specified block can be walked on
      */
     static boolean canWalkOn(BlockStateInterface bsi, int x, int y, int z, IBlockState state) {
         Ternary canWalkOn = canWalkOnBlockState(state);
@@ -481,14 +513,14 @@ public interface MovementHelper extends ActionCosts, Helper {
     static boolean canUseFrostWalker(CalculationContext context, IBlockState state) {
         return context.frostWalker != 0
                 && (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
-                && ((Integer) state.getValue(BlockLiquid.LEVEL)) == 0;
+                && state.getValue(BlockLiquid.LEVEL) == 0;
     }
 
     static boolean canUseFrostWalker(IPlayerContext ctx, BlockPos pos) {
         IBlockState state = BlockStateInterface.get(ctx, pos);
         return EnchantmentHelper.hasFrostWalkerEnchantment(ctx.player())
                 && (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
-                && ((Integer) state.getValue(BlockLiquid.LEVEL)) == 0;
+                && state.getValue(BlockLiquid.LEVEL) == 0;
     }
 
     /**
@@ -721,7 +753,7 @@ public interface MovementHelper extends ActionCosts, Helper {
     }
 
     enum PlaceResult {
-        READY_TO_PLACE, ATTEMPTING, NO_OPTION;
+        READY_TO_PLACE, ATTEMPTING, NO_OPTION
     }
 
     static boolean isTransparent(Block b) {

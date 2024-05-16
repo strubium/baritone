@@ -88,9 +88,13 @@ public class MovementTraverse extends Movement {
                     // with frostwalker we can walk on water without the penalty, if we are sure we won't be using jesus
                 } else if (destOn.getBlock() == Blocks.WATER) {
                     WC += context.walkOnWaterOnePenalty;
+                } else if (destOn.getBlock() == Blocks.MAGMA && !context.frostwalker) {
+                    WC += (SNEAK_ONE_BLOCK_COST - WALK_ONE_BLOCK_COST) / 2;
                 }
                 if (srcDownBlock == Blocks.SOUL_SAND) {
                     WC += (WALK_ONE_OVER_SOUL_SAND_COST - WALK_ONE_BLOCK_COST) / 2;
+                } else if (srcDown == Blocks.MAGMA && !context.frostwalker) {
+                    WC += (SNEAK_ONE_BLOCK_COST - WALK_ONE_BLOCK_COST) / 2;
                 }
             }
             double hardness1 = MovementHelper.getMiningDurationTicks(context, destX, y, destZ, pb1, false);
@@ -99,7 +103,7 @@ public class MovementTraverse extends Movement {
             }
             double hardness2 = MovementHelper.getMiningDurationTicks(context, destX, y + 1, destZ, pb0, true); // only include falling on the upper block to break
             if (hardness1 == 0 && hardness2 == 0) {
-                if (!water && context.canSprint) {
+                if (!water && context.canSprint && context.bsi.get0(x, y - 1, z).getBlock() != Blocks.MAGMA) {
                     // If there's nothing in the way, and this isn't water, and we aren't sneak placing
                     // We can sprint =D
                     // Don't check for soul sand, since we can sprint on that too
@@ -243,6 +247,10 @@ public class MovementTraverse extends Movement {
                 return state.setInput(Input.JUMP, true);
             }
             return state;
+        }
+        if (MovementHelper.isOverMagma(ctx, src, dest)) {
+            state.setInput(Input.SPRINT, false);
+            state.setInput(Input.SNEAK, true);
         }
 
         if (isTheBridgeBlockThere) {

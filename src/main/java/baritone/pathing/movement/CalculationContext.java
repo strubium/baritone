@@ -74,6 +74,7 @@ public class CalculationContext {
     public int minFallHeight;
     public int maxFallHeightNoWater;
     public final int maxFallHeightBucket;
+    public final boolean frostwalker;
     public final double waterWalkSpeed;
     public final double breakBlockAdditionalCost;
     public double backtrackCostFavoringCoefficient;
@@ -115,6 +116,7 @@ public class CalculationContext {
         this.minFallHeight = 3; // Minimum fall height used by MovementFall
         this.maxFallHeightNoWater = Baritone.settings().maxFallHeightNoWater.value;
         this.maxFallHeightBucket = Baritone.settings().maxFallHeightBucket.value;
+        this.frostwalker = EnchantmentHelper.hasFrostWalkerEnchantment(player);
         int depth = EnchantmentHelper.getDepthStriderModifier(player);
         if (depth > 3) {
             depth = 3;
