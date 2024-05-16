@@ -55,7 +55,7 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
     private int amount;
     private List<IRecipe> recipes;
     private Goal goal;
-    private boolean placeCraftingTable = Baritone.settings().placeCraftingTable.value;;
+    private boolean placeCraftingTable = Baritone.settings().placeCraftingTable.value;
     private boolean clearToPush;
     private List<BlockPos> knownLocations;
 
@@ -71,7 +71,7 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
     @Override
     public synchronized PathingCommand onTick(boolean calcFailed, boolean isSafeToCancel) {
         if (calcFailed) {
-            logDirect("path calculation failed");
+            logDirect("Craft failed");
             onLostControl();
             return new PathingCommand(null, PathingCommandType.CANCEL_AND_SET_GOAL);
         } else if (goal != null && !(goal instanceof GoalRunAway)) {
