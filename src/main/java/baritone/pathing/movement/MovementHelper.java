@@ -437,6 +437,9 @@ public interface MovementHelper extends ActionCosts, Helper {
         if (block == Blocks.GLASS || block == Blocks.STAINED_GLASS) {
             return YES;
         }
+        if (block instanceof BlockLilyPad) {
+            return YES;
+        }
         if (block instanceof BlockStairs) {
             return YES;
         }
