@@ -77,6 +77,16 @@ public interface IWaypoint {
         BED("bed", "spawn"),
 
         /**
+         * Tag indicating a crafting table position
+         */
+        CRAFTING_TABLE("crafting_table", "table"),
+
+        /**
+         * Tag indicating a furnace position
+         */
+        FURNACE("furnace"),
+
+        /**
          * Tag indicating that the waypoint was user-created
          */
         USER("user");
