@@ -438,7 +438,10 @@ public interface MovementHelper extends ActionCosts, Helper {
         if (block == Blocks.GLASS || block == Blocks.STAINED_GLASS) {
             return YES;
         }
-        if (block instanceof BlockLilyPad) {
+        if (block == Blocks.DAYLIGHT_DETECTOR || block == Blocks.DAYLIGHT_DETECTOR_INVERTED) { // Kinda glitchy rn, baritone keeps jumping
+            return YES;
+        }
+        if (block instanceof BlockLilyPad) { // Kinda glitchy rn, baritone keeps jumping
             return YES;
         }
         if (block instanceof BlockAnvil) {
@@ -451,6 +454,9 @@ public interface MovementHelper extends ActionCosts, Helper {
             return YES;
         }
         if (block instanceof BlockHopper) {
+            return YES;
+        }
+        if (block instanceof BlockBarrier) {
             return YES;
         }
         if (isWater(block)) {
