@@ -440,7 +440,13 @@ public interface MovementHelper extends ActionCosts, Helper {
         if (block instanceof BlockLilyPad) {
             return YES;
         }
+        if (block instanceof BlockAnvil) {
+            return YES;
+        }
         if (block instanceof BlockStairs) {
+            return YES;
+        }
+        if (block instanceof BlockHopper) {
             return YES;
         }
         if (isWater(block)) {
