@@ -109,15 +109,16 @@ public class ToolSet {
         return getBestSlot(b, preferSilkTouch, false);
     }
     
-    /**
-     * Calculate which tool on the hotbar is best for mining, depending on an override setting,
-     * related to auto tool movement cost, it will either return current selected slot, or the best slot.
-     *
-     * @param b the blockstate to be mined
-     * @param preferSilkTouch
-     * @param pathingCalculation
-     * @return An int containing the index in the tools array that worked best
-     */
+   /**
+    * Calculate which tool on the hotbar is best for mining, depending on an override setting,
+    * related to auto tool movement cost, it will either return current selected slot, or the best slot.
+    *
+    * @param b the blockstate to be mined
+    * @param preferSilkTouch if true, the function will prioritize tools with silk touch enchantment
+    * @param pathingCalculation if true, the function will return the best tool for the current block,
+    *                           even if auto tool movement is disabled.
+    * @return An int containing the index in the tools array that worked best
+ */
     public int getBestSlot(Block b, boolean preferSilkTouch, boolean pathingCalculation) {
 
     /*
