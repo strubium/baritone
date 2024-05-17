@@ -68,6 +68,15 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
         return recipes != null && amount >= 1;
     }
 
+    /**
+    * This method is called every tick while the crafting process is active.
+    * It handles the main logic of the crafting process, such as pathing to a crafting table,
+    * crafting the items, and handling any errors or failures.
+    *
+    * @param calcFailed Indicates whether the calculation failed.
+    * @param isSafeToCancel Indicates whether it is safe to cancel the crafting process.
+    * @return A PathingCommand representing the next action to be taken by the crafting process.
+    */
     @Override
     public synchronized PathingCommand onTick(boolean calcFailed, boolean isSafeToCancel) {
         if (calcFailed) {
@@ -269,6 +278,12 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
         }
     }
 
+    /**
+    * Method to place a crafting table in the world.
+    * It searches for a suitable placement, and places the table. 
+    * If a suitable placement cannot be found, it sets a
+    * {@link GoalRunAway} goal to move away from the current position.
+    */
     private void placeCraftingTable() {
         Optional<Placement> toPlace = searchPlacement();
 
@@ -284,7 +299,7 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
                 goal = new GoalGetToBlock(toPlace.get().placeAgainst.offset(toPlace.get().side));
             }
         } else {
-            goal = new GoalRunAway(5, ctx.playerFeet());
+            goal = new GoalRunAway(5, ctx.playerFeet()); //Can't place a crafting table here, go 5 blocks away
         }
     }
 
