@@ -50,6 +50,7 @@ import static baritone.pathing.precompute.Ternary.*;
  */
 public interface MovementHelper extends ActionCosts, Helper {
 
+
     static boolean avoidBreaking(BlockStateInterface bsi, int x, int y, int z, IBlockState state) {
         if (!bsi.worldBorder.canPlaceAt(x, z)) {
             return true;
@@ -441,6 +442,9 @@ public interface MovementHelper extends ActionCosts, Helper {
             return YES;
         }
         if (block instanceof BlockAnvil) {
+            return YES;
+        }
+        if (block instanceof BlockPistonBase || block instanceof BlockPistonExtension) {
             return YES;
         }
         if (block instanceof BlockStairs) {
