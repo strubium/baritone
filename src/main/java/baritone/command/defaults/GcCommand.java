@@ -26,36 +26,69 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * This class represents a command to call System.gc() in Baritone.
+ * It extends the Command class provided by Baritone's API.
+ */
 public class GcCommand extends Command {
 
+    /**
+     * Constructor for GcCommand.
+     *
+     * @param baritone The instance of IBaritone that this command is associated with.
+     */
     public GcCommand(IBaritone baritone) {
         super(baritone, "gc");
     }
 
+    /**
+     * Executes the command.
+     *
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @throws CommandException If there are any errors executing the command.
+     */
     @Override
     public void execute(String label, IArgConsumer args) throws CommandException {
-        args.requireMax(0);
-        System.gc();
-        logDirect("ok called System.gc()");
+        args.requireMax(0); // This command does not accept any arguments
+        System.gc(); // Call System.gc()
+        logDirect("ok called System.gc()"); // Log the success of calling System.gc()
     }
 
+    /**
+     * Provides tab completion options for the command.
+     *
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @return An empty stream, as this command does not support tab completion.
+     */
     @Override
     public Stream<String> tabComplete(String label, IArgConsumer args) {
-        return Stream.empty();
+        return Stream.empty(); // This command does not support tab completion
     }
 
+    /**
+     * Returns a short description of the command.
+     *
+     * @return A string describing the command.
+     */
     @Override
     public String getShortDesc() {
-        return "Call System.gc()";
+        return "Call System.gc()"; // Short description of the command
     }
 
+    /**
+     * Returns a long description of the command.
+     *
+     * @return A list of strings describing the command.
+     */
     @Override
     public List<String> getLongDesc() {
         return Arrays.asList(
-                "Calls System.gc().",
+                "Calls System.gc().", // Long description of the command
                 "",
                 "Usage:",
-                "> gc"
+                "> gc" // Usage example
         );
     }
 }

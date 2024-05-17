@@ -31,23 +31,41 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * This class represents a command to craft items in the game.
+ * It extends the Command class provided by the Baritone API.
+ */
 public class CraftCommand extends Command {
 
+    /**
+     * Constructor for the CraftCommand class.
+     *
+     * @param baritone The instance of the Baritone API.
+     */
     protected CraftCommand(IBaritone baritone) {
         super(baritone, "craft");
     }
 
+    /**
+     * Executes the craft command.
+     *
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @throws CommandException If there is an error executing the command.
+     */
     @Override
     public void execute(String label, IArgConsumer args) throws CommandException {
-        int amount = args.getAsOrDefault(Integer.class, 1);
-        Item item = args.getDatatypeForOrNull(ItemById.INSTANCE);
+        int amount = args.getAsOrDefault(Integer.class, 1); // Get the quantity of items to craft. Default is 1.
+        Item item = args.getDatatypeForOrNull(ItemById.INSTANCE); // Get the item to craft.
         List<IRecipe> recipes;
 
-        if (item != null) {
+        // If an item is specified, get the crafting recipes for that item.
+        if (item!= null) {
             recipes = baritone.getCraftingProcess().getCraftingRecipes(item, false);
         } else {
-            String itemName = args.rawRest();
+            String itemName = args.rawRest(); // Get the item name to craft.
             recipes = new ArrayList<>();
+            // Find the crafting recipes for the specified item name.
             for (IRecipe recipe : CraftingManager.REGISTRY) {
                 if (recipe.getRecipeOutput().getDisplayName().equalsIgnoreCase(itemName)) {
                     recipes.add(recipe);
@@ -55,31 +73,52 @@ public class CraftCommand extends Command {
             }
         }
 
+        // If no recipes are found, log a message.
         if (recipes.isEmpty()) {
             logDirect("no crafting recipe found.");
-        } else if (!baritone.getCraftingProcess().canCraft(recipes, amount)) {
+        } else if (!baritone.getCraftingProcess().canCraft(recipes, amount)) { // Check if there are enough resources.
             logDirect("Insufficient Resources");
         } else {
-            baritone.getCraftingProcess().craft(recipes, amount);
+            baritone.getCraftingProcess().craft(recipes, amount); // Craft the items.
         }
     }
 
+    /**
+     * Provides tab completion options for the craft command.
+     *
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @return A stream of tab completion options.
+     * @throws CommandException If there is an error executing the command.
+     */
     @Override
     public Stream<String> tabComplete(String label, IArgConsumer args) throws CommandException {
+        // If there are more than 2 arguments, do not provide tab completion.
         while (args.has(2)) {
             if (args.peekDatatypeOrNull(ItemById.INSTANCE) == null) {
                 return Stream.empty();
             }
             args.get();
         }
+        // Provide tab completion for item names.
         return args.tabCompleteDatatype(ItemById.INSTANCE);
     }
 
+    /**
+     * Returns a short description of the craft command.
+     *
+     * @return The short description of the command.
+     */
     @Override
     public String getShortDesc() {
         return "Craft a item.";
     }
 
+    /**
+     * Returns a list of detailed descriptions of the craft command.
+     *
+     * @return A list of detailed descriptions of the command.
+     */
     @Override
     public List<String> getLongDesc() {
         return Arrays.asList(

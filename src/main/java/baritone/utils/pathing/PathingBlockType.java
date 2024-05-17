@@ -18,6 +18,8 @@
 package baritone.utils.pathing;
 
 /**
+ * Represents different types of blocks that can be encountered during pathing.
+ *
  * @author Brady
  * @since 8/4/2018
  */
@@ -29,18 +31,35 @@ public enum PathingBlockType {
     SOLID(0b11);
 
     private final boolean[] bits;
-
+    
+    /**
+     * Constructs a PathingBlockType from the given bit representation.
+     *
+     * @param bits The bit representation of the PathingBlockType.
+     */
     PathingBlockType(int bits) {
         this.bits = new boolean[]{
                 (bits & 0b10) != 0,
                 (bits & 0b01) != 0
         };
     }
-
+    
+    /**
+     * Returns the bit representation of this PathingBlockType.
+     *
+     * @return The bit representation of this PathingBlockType.
+     */
     public final boolean[] getBits() {
         return this.bits;
     }
-
+    
+    /**
+     * Constructs a PathingBlockType from the given boolean values.
+     *
+     * @param b1 The first boolean value.
+     * @param b2 The second boolean value.
+     * @return The PathingBlockType corresponding to the given boolean values.
+     */
     public static PathingBlockType fromBits(boolean b1, boolean b2) {
         return b1 ? b2 ? SOLID : AVOID : b2 ? WATER : AIR;
     }
