@@ -108,7 +108,16 @@ public class ToolSet {
     public int getBestSlot(Block b, boolean preferSilkTouch) {
         return getBestSlot(b, preferSilkTouch, false);
     }
-
+    
+    /**
+     * Calculate which tool on the hotbar is best for mining, depending on an override setting,
+     * related to auto tool movement cost, it will either return current selected slot, or the best slot.
+     *
+     * @param b the blockstate to be mined
+     * @param preferSilkTouch
+     * @param pathingCalculation
+     * @return An int containing the index in the tools array that worked best
+     */
     public int getBestSlot(Block b, boolean preferSilkTouch, boolean pathingCalculation) {
 
     /*
@@ -166,7 +175,6 @@ public class ToolSet {
                 }
             }
         }
-
         return best;
     }
 
