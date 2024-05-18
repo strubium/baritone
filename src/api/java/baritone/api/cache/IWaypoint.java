@@ -87,6 +87,16 @@ public interface IWaypoint {
         FURNACE("furnace"),
 
         /**
+         * Tag indicating a end portal position
+         */
+        ENDER_PORTAL("end_portal"),
+
+        /**
+         * Tag indicating a nether portal position
+         */
+        NETHER_PORTAL("nether_portal"),
+
+        /**
          * Tag indicating that the waypoint was user-created
          */
         USER("user");

@@ -216,7 +216,7 @@ public interface MovementHelper extends ActionCosts, Helper {
             return YES;
         }
         // exceptions - blocks that are isPassable true, but we can't actually jump through
-        if (block == Blocks.FIRE
+        else if (block == Blocks.FIRE
                 || block == Blocks.TRIPWIRE
                 || block == Blocks.WEB
                 || block == Blocks.VINE
@@ -456,7 +456,16 @@ public interface MovementHelper extends ActionCosts, Helper {
         if (block instanceof BlockHopper) {
             return YES;
         }
+        if (block instanceof BlockEnchantmentTable) {
+            return YES;
+        }
+        if (block instanceof BlockEndPortalFrame) {
+            return YES;
+        }
         if (block instanceof BlockBarrier) {
+            return YES;
+        }
+        if (block instanceof BlockShulkerBox) {
             return YES;
         }
         if (isWater(block)) {

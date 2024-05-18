@@ -25,6 +25,8 @@ import baritone.api.utils.BetterBlockPos;
 import baritone.api.utils.Helper;
 import baritone.utils.BlockStateInterface;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.BlockWorkbench;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -50,6 +52,8 @@ public class WaypointBehavior extends Behavior {
         if (event.getType() == BlockInteractEvent.Type.USE) {
             BetterBlockPos pos = BetterBlockPos.from(event.getPos());
             IBlockState state = BlockStateInterface.get(ctx, pos);
+
+            // Check if the block is a bed
             if (state.getBlock() instanceof BlockBed) {
                 if (state.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
                     pos = pos.offset(state.getValue(BlockBed.FACING));
@@ -59,6 +63,14 @@ public class WaypointBehavior extends Behavior {
                 if (!exists) {
                     baritone.getWorldProvider().getCurrentWorld().getWaypoints().addWaypoint(new Waypoint("bed", Waypoint.Tag.BED, pos));
                 }
+            }
+
+            // Check if the block is a crafting table
+            if (state.getBlock() instanceof BlockWorkbench) {
+                baritone.getWorldProvider().getCurrentWorld().getWaypoints().addWaypoint(new Waypoint("crafting_table", Waypoint.Tag.CRAFTING_TABLE, pos));
+            }
+            if (state.getBlock() instanceof BlockFurnace) {
+                baritone.getWorldProvider().getCurrentWorld().getWaypoints().addWaypoint(new Waypoint("furnace", Waypoint.Tag.FURNACE, pos));
             }
         }
     }
