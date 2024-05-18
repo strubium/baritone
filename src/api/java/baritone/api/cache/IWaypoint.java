@@ -87,6 +87,11 @@ public interface IWaypoint {
         FURNACE("furnace"),
 
         /**
+         * Tag indicating an enchanting table position
+         */
+        ENCHANT_TABLE("enchant_table"),
+
+        /**
          * Tag indicating a end portal position
          */
         ENDER_PORTAL("end_portal"),

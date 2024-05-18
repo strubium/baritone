@@ -27,6 +27,7 @@ import baritone.utils.BlockStateInterface;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockWorkbench;
+import net.minecraft.block.BlockEnchantmentTable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -71,6 +72,9 @@ public class WaypointBehavior extends Behavior {
             }
             if (state.getBlock() instanceof BlockFurnace) {
                 baritone.getWorldProvider().getCurrentWorld().getWaypoints().addWaypoint(new Waypoint("furnace", Waypoint.Tag.FURNACE, pos));
+            }
+            if (state.getBlock() instanceof BlockEnchantmentTable) {
+                baritone.getWorldProvider().getCurrentWorld().getWaypoints().addWaypoint(new Waypoint("enchanting_table", Waypoint.Tag.ENCHANT_TABLE, pos));
             }
         }
     }
