@@ -18,6 +18,8 @@
 package baritone.process;
 
 import baritone.Baritone;
+import baritone.api.cache.IWaypoint;
+import baritone.api.cache.Waypoint;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalComposite;
 import baritone.api.pathing.goals.GoalGetToBlock;
@@ -128,7 +130,7 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
         amount = 0;
         recipes = null;
         goal = null;
-        placeCraftingTable = false;
+        placeCraftingTable = Baritone.settings().placeCraftingTable.value;
         knownLocations = null;
         baritone.getInputOverrideHandler().clearAllKeys();
     }
@@ -227,9 +229,8 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
         }
         return stackSize == Integer.MAX_VALUE ? 0 : stackSize;
     }
-
     private void pathToACraftingTable() {
-        knownLocations = MineProcess.searchWorld(new CalculationContext(baritone, false), new BlockOptionalMetaLookup(Blocks.CRAFTING_TABLE), 64, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        knownLocations = MineProcess.searchWorld(new CalculationContext(baritone, true), new BlockOptionalMetaLookup(Blocks.CRAFTING_TABLE), 64, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         if (knownLocations.isEmpty()) {
             if (baritone.getInventoryBehavior().throwaway(false, this::isCraftingTable)) {
                 placeCraftingTable = true;
@@ -300,6 +301,7 @@ public final class CraftingProcess extends BaritoneProcessHelper implements ICra
             }
         } else {
             goal = new GoalRunAway(5, ctx.playerFeet()); //Can't place a crafting table here, go 5 blocks away
+            logDirect("Can't place a Crafting Table here!");
         }
     }
 
