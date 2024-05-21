@@ -68,7 +68,7 @@ public class CalculationContext {
     public final boolean allowParkourAscend;
     public final boolean assumeWalkOnWater;
     public boolean allowFallIntoLava;
-    public final int frostWalker;
+    public final int frostWalkerLevel = 0;
     public final boolean allowDiagonalDescend;
     public final boolean allowDiagonalAscend;
     public final boolean allowDownward;
@@ -134,8 +134,8 @@ public class CalculationContext {
         this.allowDiagonalAscend = Baritone.settings().allowDiagonalAscend.value;
         this.allowDownward = Baritone.settings().allowDownward.value;
         this.minFallHeight = 3; // Minimum fall height used by MovementFall
-        this.maxFallHeightNoWater = Baritone.settings().maxFallHeightNoWater.value + this.featherFallingLevel;
-        this.maxFallHeightBucket = Baritone.settings().maxFallHeightBucket.value + this.featherFallingLevel;
+        this.maxFallHeightNoWater = (int) (Baritone.settings().maxFallHeightNoWater.value + this.featherFallingLevel);
+        this.maxFallHeightBucket = (int) (Baritone.settings().maxFallHeightBucket.value + this.featherFallingLevel);
         this.frostwalker = EnchantmentHelper.hasFrostWalkerEnchantment(player);
         int depth = EnchantmentHelper.getDepthStriderModifier(player);
         if (depth > 3) { //TODO: Why?

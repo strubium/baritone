@@ -539,7 +539,7 @@ public interface MovementHelper extends ActionCosts, Helper {
     }
 
     static boolean canUseFrostWalker(CalculationContext context, IBlockState state) {
-        return context.frostWalker != 0
+        return context.frostWalkerLevel != 0
                 && (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
                 && state.getValue(BlockLiquid.LEVEL) == 0;
     }
