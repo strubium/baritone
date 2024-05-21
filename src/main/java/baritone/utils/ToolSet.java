@@ -134,6 +134,7 @@ public class ToolSet {
         int lowestCost = Integer.MAX_VALUE;
         boolean bestSilkTouch = false;
         int bestFortune = Integer.MIN_VALUE;
+        int bestUnbreaking = Integer.MIN_VALUE;
         IBlockState blockState = b.getDefaultState();
 
         for (int i = 0; i < 9; i++) {
@@ -148,8 +149,8 @@ public class ToolSet {
 
             double speed = calculateSpeedVsBlock(itemStack, blockState);
             boolean silkTouch = hasSilkTouch(itemStack);
-            int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack);
-
+            int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack); //See: https://nekoyue.github.io/ForgeJavaDocs-NG/javadoc/1.12.2/
+            int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
             if (speed > highestSpeed) {
                 highestSpeed = speed;
                 best = i;

@@ -72,7 +72,7 @@ public final class Settings {
     /**
      * Allow Baritone to move items in your inventory to your hotbar
      */
-    public final Setting<Boolean> allowInventory = new Setting<>(false);
+    public final Setting<Boolean> allowInventory = new Setting<>(true);
 
     /**
      * Wait this many ticks between InventoryBehavior moving inventory items
@@ -82,7 +82,7 @@ public final class Settings {
     /**
      * Come to a halt before doing any inventory moves. Intended for anticheat such as 2b2t
      */
-    public final Setting<Boolean> inventoryMoveOnlyIfStationary = new Setting<>(false);
+    public final Setting<Boolean> inventoryMoveOnlyIfStationary = new Setting<>(true);
 
     /**
      * Disable baritone's auto-tool at runtime, but still assume that another mod will provide auto tool functionality
@@ -110,7 +110,7 @@ public final class Settings {
      * For example, fire has a break cost of 0, this makes it nonzero, so all else being equal
      * it will take an otherwise equivalent route that doesn't require it to put out fire.
      */
-    public final Setting<Double> blockBreakAdditionalPenalty = new Setting<>(2D);
+    public final Setting<Double> blockBreakAdditionalPenalty = new Setting<>(1.5D);
 
     /**
      * Additional penalty for hitting the space bar (ascend, pillar, or parkour) because it uses hunger
@@ -165,7 +165,7 @@ public final class Settings {
     /**
      * If true, and the bot has a crafting table in its inventory, place down a crafting table when trying to craft
      */
-    public final Setting<Boolean>  placeCraftingTable = new Setting<>(false);
+    public final Setting<Boolean> placeCraftingTable = new Setting<>(true);
 
     /**
      * If true, parkour is allowed to make jumps when standing on blocks at the maximum height, so player feet is y=256
@@ -195,14 +195,14 @@ public final class Settings {
      * <p>
      * Actually pretty safe, much safer than diagonal descend tbh
      */
-    public final Setting<Boolean> allowDiagonalAscend = new Setting<>(false);
+    public final Setting<Boolean> allowDiagonalAscend = new Setting<>(true);
 
     /**
      * Allow mining the block directly beneath its feet
      * <p>
      * Turn this off to force it to make more staircases and less shafts
      */
-    public final Setting<Boolean> allowDownward = new Setting<>(true);
+    public final Setting<Boolean> allowDownward = new Setting<>(false);
 
     /**
      * Blocks that Baritone is allowed to place (as throwaway, for sneak bridging, pillaring, etc.)
@@ -346,14 +346,14 @@ public final class Settings {
      * <p>
      * It also overshoots the landing pretty much always (making contact with the next block over), so be careful
      */
-    public final Setting<Boolean> allowParkour = new Setting<>(false);
+    public final Setting<Boolean> allowParkour = new Setting<>(true);
 
     /**
      * Actually pretty reliable.
      * <p>
      * Doesn't make it any more dangerous compared to just normal allowParkour th
      */
-    public final Setting<Boolean> allowParkourPlace = new Setting<>(false);
+    public final Setting<Boolean> allowParkourPlace = new Setting<>(true);
 
     /**
      * For example, if you have Mining Fatigue or Haste, adjust the costs of breaking blocks accordingly.
@@ -431,7 +431,7 @@ public final class Settings {
      * Specifically, building up the avoidance map on the main thread before pathing starts actually takes a noticeable
      * amount of time, especially when there are a lot of mobs around, and your game jitters for like 200ms while doing so
      */
-    public final Setting<Boolean> avoidance = new Setting<>(false);
+    public final Setting<Boolean> avoidance = new Setting<>(true);
 
     /**
      * Set to 1.0 to effectively disable this feature
@@ -461,7 +461,7 @@ public final class Settings {
      * When running a goto towards a container block (chest, ender chest, furnace, etc),
      * right click and open it once you arrive.
      */
-    public final Setting<Boolean> rightClickContainerOnArrival = new Setting<>(true);
+    public final Setting<Boolean> rightClickContainerOnArrival = new Setting<>(false);
 
     /**
      * When running a goto towards a nether portal block, walk all the way into the portal
@@ -511,7 +511,7 @@ public final class Settings {
     /**
      * Start planning the next path once the remaining movements tick estimates sum up to less than this value
      */
-    public final Setting<Integer> planningTickLookahead = new Setting<>(150);
+    public final Setting<Integer> planningTickLookahead = new Setting<>(250);
 
     /**
      * Default size of the Long2ObjectOpenHashMap used in pathing
@@ -630,14 +630,14 @@ public final class Settings {
      *
      * @see <a href="https://github.com/cabaletta/baritone/issues/248">Issue #248</a>
      */
-    public final Setting<Boolean> pruneRegionsFromRAM = new Setting<>(true);
+    public final Setting<Boolean> pruneRegionsFromRAM = new Setting<>(false);
 
     /**
      * The chunk packer queue can never grow to larger than this, if it does, the oldest chunks are discarded
      * <p>
      * The newest chunks are kept, so that if you're moving in a straight line quickly then stop, your immediate render distance is still included
      */
-    public final Setting<Integer> chunkPackerQueueMaxSize = new Setting<>(2000);
+    public final Setting<Integer> chunkPackerQueueMaxSize = new Setting<>(4000);
 
     /**
      * Fill in blocks behind you
@@ -810,7 +810,7 @@ public final class Settings {
      * <p>
      * SOLID is rendered as stone in the overworld, netherrack in the nether, and end stone in the end
      */
-    public final Setting<Boolean> renderCachedChunks = new Setting<>(false);
+    public final Setting<Boolean> renderCachedChunks = new Setting<>(true);
 
     /**
      * 0.0f = not visible, fully transparent (instead of setting this to 0, turn off renderCachedChunks)
@@ -1417,7 +1417,7 @@ public final class Settings {
      * Whether nether-pathfinder should generate terrain based on {@link #elytraNetherSeed}.
      * If false all chunks that haven't been loaded are assumed to be air.
      */
-    public final Setting<Boolean> elytraPredictTerrain = new Setting<>(true);
+    public final Setting<Boolean> elytraPredictTerrain = new Setting<>(false);
 
     /**
      * Automatically swap the current elytra with a new one when the durability gets too low
