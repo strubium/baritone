@@ -29,6 +29,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.init.Enchantments;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -81,6 +82,8 @@ public class CalculationContext {
     public double jumpPenalty;
     public final double walkOnWaterOnePenalty;
     public final BetterWorldBorder worldBorder;
+    private final double featherFallingLevel;
+
 
     public final PrecomputedData precomputedData;
 
@@ -88,6 +91,10 @@ public class CalculationContext {
         this(baritone, false);
     }
 
+    /**
+     * @param baritone
+     * @param forUseOnAnotherThread
+     */
     public CalculationContext(IBaritone baritone, boolean forUseOnAnotherThread) {
         this.precomputedData = new PrecomputedData();
         this.safeForThreadedUse = forUseOnAnotherThread;
@@ -109,16 +116,29 @@ public class CalculationContext {
         this.allowParkourAscend = Baritone.settings().allowParkourAscend.value;
         this.assumeWalkOnWater = Baritone.settings().assumeWalkOnWater.value;
         this.allowFallIntoLava = false; // Super secret internal setting for ElytraBehavior
-        this.frostWalker = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FROST_WALKER, baritone.getPlayerContext().player());
+        switch (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FEATHER_FALLING, baritone.getPlayerContext().player())) {
+            case 0:
+                this.featherFallingLevel = 0.12;
+                break;
+            case 1:
+                this.featherFallingLevel = 0.24;
+                break;
+            case 2:
+                this.featherFallingLevel = 0.36;
+                break;
+            default:
+                this.featherFallingLevel = 0.48;
+                break;
+        }
         this.allowDiagonalDescend = Baritone.settings().allowDiagonalDescend.value;
         this.allowDiagonalAscend = Baritone.settings().allowDiagonalAscend.value;
         this.allowDownward = Baritone.settings().allowDownward.value;
         this.minFallHeight = 3; // Minimum fall height used by MovementFall
-        this.maxFallHeightNoWater = Baritone.settings().maxFallHeightNoWater.value;
-        this.maxFallHeightBucket = Baritone.settings().maxFallHeightBucket.value;
+        this.maxFallHeightNoWater = Baritone.settings().maxFallHeightNoWater.value + this.featherFallingLevel;
+        this.maxFallHeightBucket = Baritone.settings().maxFallHeightBucket.value + this.featherFallingLevel;
         this.frostwalker = EnchantmentHelper.hasFrostWalkerEnchantment(player);
         int depth = EnchantmentHelper.getDepthStriderModifier(player);
-        if (depth > 3) {
+        if (depth > 3) { //TODO: Why?
             depth = 3;
         }
         float mult = depth / 3.0F;
