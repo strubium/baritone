@@ -31,7 +31,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -43,6 +42,9 @@ import java.util.List;
 import static baritone.api.pathing.movement.ActionCosts.COST_INF;
 
 /**
+ * This class represents the context in which path calculations are performed.
+ * It encapsulates various settings, player capabilities, and world data.
+ *
  * @author Brady
  * @since 8/7/2018
  */
@@ -172,7 +174,16 @@ public class CalculationContext {
     public Block getBlock(int x, int y, int z) {
         return get(x, y, z).getBlock();
     }
-
+    
+    /**
+     * Returns the cost of placing a block at the specified coordinates.
+     *
+     * @param x The x-coordinate of the block.
+     * @param y The y-coordinate of the block.
+     * @param z The z-coordinate of the block.
+     * @param current The current state of the block at the specified coordinates.
+     * @return The cost of placing the block, or COST_INF if the block cannot be placed.
+     */
     public double costOfPlacingAt(int x, int y, int z, IBlockState current) {
         if (!hasThrowaway) { // only true if allowPlace is true, see constructor
             return COST_INF;

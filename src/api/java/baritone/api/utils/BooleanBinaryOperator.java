@@ -18,10 +18,22 @@
 package baritone.api.utils;
 
 /**
+ * This functional interface represents an operation on two boolean operands and produces a boolean result.
+ * It is a specialization of {@link java.util.function.BiFunction} for boolean values.
+ *
+ * <p>This is a functional interface whose functional method is {@link #applyAsBoolean(boolean, boolean)}.
+ *
  * @author Brady
  */
 @FunctionalInterface
 public interface BooleanBinaryOperator {
 
+    /**
+     * Applies this operator to the given arguments.
+     *
+     * @param a the first operand
+     * @param b the second operand
+     * @return the result of applying this operator to {@code a} and {@code b}
+     */
     boolean applyAsBoolean(boolean a, boolean b);
 }
