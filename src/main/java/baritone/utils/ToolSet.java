@@ -206,7 +206,7 @@ public class ToolSet {
     public static double calculateSpeedVsBlock(ItemStack item, IBlockState state) {
         float hardness;
         try {
-            hardness = state.getDestroySpeed(null, null);
+            hardness = state.getBlockHardness(null, null);
         } catch (NullPointerException npe) {
             // can't easily determine the hardness so treat it as unbreakable
             return -1;
