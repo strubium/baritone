@@ -108,17 +108,17 @@ public class ToolSet {
     public int getBestSlot(Block b, boolean preferSilkTouch) {
         return getBestSlot(b, preferSilkTouch, false);
     }
-    
-   /**
-    * Calculate which tool on the hotbar is best for mining, depending on an override setting,
-    * related to auto tool movement cost, it will either return current selected slot, or the best slot.
-    *
-    * @param b the blockstate to be mined
-    * @param preferSilkTouch if true, the function will prioritize tools with silk touch enchantment
-    * @param pathingCalculation if true, the function will return the best tool for the current block,
-    *                           even if auto tool movement is disabled.
-    * @return An int containing the index in the tools array that worked best
- */
+
+    /**
+     * Calculate which tool on the hotbar is best for mining, depending on an override setting,
+     * related to auto tool movement cost, it will either return current selected slot, or the best slot.
+     *
+     * @param b the blockstate to be mined
+     * @param preferSilkTouch if true, the function will prioritize tools with silk touch enchantment
+     * @param pathingCalculation if true, the function will return the best tool for the current block,
+     *                           even if auto tool movement is disabled.
+     * @return An int containing the index in the tools array that worked best
+     */
     public int getBestSlot(Block b, boolean preferSilkTouch, boolean pathingCalculation) {
 
     /*
@@ -151,12 +151,14 @@ public class ToolSet {
             boolean silkTouch = hasSilkTouch(itemStack);
             int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack); //See: https://nekoyue.github.io/ForgeJavaDocs-NG/javadoc/1.12.2/
             int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
+
             if (speed > highestSpeed) {
                 highestSpeed = speed;
                 best = i;
                 lowestCost = getMaterialCost(itemStack);
                 bestSilkTouch = silkTouch;
                 bestFortune = fortune;
+                bestUnbreaking = unbreaking;
             } else if (speed == highestSpeed) {
                 int cost = getMaterialCost(itemStack);
 
@@ -165,14 +167,22 @@ public class ToolSet {
                     lowestCost = cost;
                     bestSilkTouch = silkTouch;
                     bestFortune = fortune;
+                    bestUnbreaking = unbreaking;
                 } else if (silkTouch == bestSilkTouch) {
                     if (cost < lowestCost) {
                         best = i;
                         lowestCost = cost;
                         bestFortune = fortune;
-                    } else if (cost == lowestCost && fortune > bestFortune) {
-                        best = i;
-                        bestFortune = fortune;
+                        bestUnbreaking = unbreaking;
+                    } else if (cost == lowestCost) {
+                        if (fortune > bestFortune) {
+                            best = i;
+                            bestFortune = fortune;
+                            bestUnbreaking = unbreaking;
+                        } else if (fortune == bestFortune && unbreaking > bestUnbreaking) {
+                            best = i;
+                            bestUnbreaking = unbreaking;
+                        }
                     }
                 }
             }

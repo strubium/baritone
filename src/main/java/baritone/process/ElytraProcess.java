@@ -368,10 +368,7 @@ public class ElytraProcess extends BaritoneProcessHelper implements IBaritonePro
                 qty += inv.get(i).getCount();
             }
         }
-        if (qty <= Baritone.settings().elytraMinFireworksBeforeLanding.value) {
-            return true;
-        }
-        return false;
+        return qty <= Baritone.settings().elytraMinFireworksBeforeLanding.value;
     }
 
     @Override
@@ -485,9 +482,9 @@ public class ElytraProcess extends BaritoneProcessHelper implements IBaritonePro
                 || !isSafeBlock(pos.south().east());
     }
 
-    private boolean isColumnAir(BlockPos landingSpot, int minHeight) {
+    private boolean isColumnAir(BlockPos landingSpot) {
         BlockPos.MutableBlockPos mut = new BlockPos.MutableBlockPos(landingSpot);
-        final int maxY = mut.getY() + minHeight;
+        final int maxY = mut.getY() + ElytraProcess.LANDING_COLUMN_HEIGHT;
         for (int y = mut.getY() + 1; y <= maxY; y++) {
             mut.setPos(mut.getX(), y, mut.getZ());
             if (!ctx.world().isAirBlock(mut)) {
@@ -549,7 +546,7 @@ public class ElytraProcess extends BaritoneProcessHelper implements IBaritonePro
             BetterBlockPos pos = queue.poll();
             if (ctx.world().isBlockLoaded(pos, false) && isInBounds(pos) && ctx.world().getBlockState(pos).getBlock() == Blocks.AIR) {
                 BetterBlockPos actualLandingSpot = checkLandingSpot(pos, checkedPositions);
-                if (actualLandingSpot != null && isColumnAir(actualLandingSpot, LANDING_COLUMN_HEIGHT) && hasAirBubble(actualLandingSpot.up(LANDING_COLUMN_HEIGHT)) && !badLandingSpots.contains(actualLandingSpot.up(LANDING_COLUMN_HEIGHT))) {
+                if (actualLandingSpot != null && isColumnAir(actualLandingSpot) && hasAirBubble(actualLandingSpot.up(LANDING_COLUMN_HEIGHT)) && !badLandingSpots.contains(actualLandingSpot.up(LANDING_COLUMN_HEIGHT))) {
                     return actualLandingSpot.up(LANDING_COLUMN_HEIGHT);
                 }
                 if (visited.add(pos.north())) queue.add(pos.north());
