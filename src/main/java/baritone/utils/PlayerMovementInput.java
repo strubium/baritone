@@ -34,23 +34,23 @@ public class PlayerMovementInput extends MovementInput {
 
         jump = handler.isInputForcedDown(Input.JUMP); // oppa gangnam style
 
-        if (this.forwardKeyDown = handler.isInputForcedDown(Input.MOVE_FORWARD)) {
+        if (this.forwardKeyDown == handler.isInputForcedDown(Input.MOVE_FORWARD)) {
             this.moveForward++;
         }
 
-        if (this.backKeyDown = handler.isInputForcedDown(Input.MOVE_BACK)) {
+        if (this.backKeyDown == handler.isInputForcedDown(Input.MOVE_BACK)) {
             this.moveForward--;
         }
 
-        if (this.leftKeyDown = handler.isInputForcedDown(Input.MOVE_LEFT)) {
+        if (this.leftKeyDown == handler.isInputForcedDown(Input.MOVE_LEFT)) {
             this.moveStrafe++;
         }
 
-        if (this.rightKeyDown = handler.isInputForcedDown(Input.MOVE_RIGHT)) {
+        if (this.rightKeyDown == handler.isInputForcedDown(Input.MOVE_RIGHT)) {
             this.moveStrafe--;
         }
 
-        if (this.sneak = handler.isInputForcedDown(Input.SNEAK)) {
+        if (this.sneak == handler.isInputForcedDown(Input.SNEAK)) {
             this.moveStrafe *= 0.3D;
             this.moveForward *= 0.3D;
         }

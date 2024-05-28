@@ -27,8 +27,6 @@ import baritone.api.process.PathingCommand;
 import baritone.api.process.PathingCommandType;
 import baritone.behavior.PathingBehavior;
 import baritone.pathing.path.PathExecutor;
-import baritone.process.CustomGoalProcess;
-import baritone.process.ElytraProcess;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
@@ -170,11 +168,9 @@ public class PathingControlManager implements IPathingControlManager {
         if (current != null) {
             Goal intended = current.getPath().getGoal();
             BlockPos end = current.getPath().getDest();
-            if (intended.isInGoal(end) && !newGoal.isInGoal(end)) {
-                // this path used to end in the goal
-                // but the goal has changed, so there's no reason to continue...
-                return true;
-            }
+            // this path used to end in the goal
+            // but the goal has changed, so there's no reason to continue...
+            return intended.isInGoal(end) && !newGoal.isInGoal(end);
         }
         return false;
     }
