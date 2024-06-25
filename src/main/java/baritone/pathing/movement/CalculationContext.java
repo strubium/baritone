@@ -84,6 +84,7 @@ public class CalculationContext {
     public double jumpPenalty;
     public final double walkOnWaterOnePenalty;
     public final BetterWorldBorder worldBorder;
+    private final double featherFallingLevel;
 
 
     public final PrecomputedData precomputedData;
@@ -117,27 +118,26 @@ public class CalculationContext {
         this.allowParkourAscend = Baritone.settings().allowParkourAscend.value;
         this.assumeWalkOnWater = Baritone.settings().assumeWalkOnWater.value;
         this.allowFallIntoLava = false; // Super secret internal setting for ElytraBehavior
-        double featherFallingLevel;
         switch (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FEATHER_FALLING, baritone.getPlayerContext().player())) {
             case 0:
-                featherFallingLevel = 0.12;
+                this.featherFallingLevel = 0.12;
                 break;
             case 1:
-                featherFallingLevel = 0.24;
+                this.featherFallingLevel = 0.24;
                 break;
             case 2:
-                featherFallingLevel = 0.36;
+                this.featherFallingLevel = 0.36;
                 break;
             default:
-                featherFallingLevel = 0.48;
+                this.featherFallingLevel = 0.48;
                 break;
         }
         this.allowDiagonalDescend = Baritone.settings().allowDiagonalDescend.value;
         this.allowDiagonalAscend = Baritone.settings().allowDiagonalAscend.value;
         this.allowDownward = Baritone.settings().allowDownward.value;
         this.minFallHeight = 3; // Minimum fall height used by MovementFall
-        this.maxFallHeightNoWater = (int) (Baritone.settings().maxFallHeightNoWater.value + featherFallingLevel);
-        this.maxFallHeightBucket = (int) (Baritone.settings().maxFallHeightBucket.value + featherFallingLevel);
+        this.maxFallHeightNoWater = (int) (Baritone.settings().maxFallHeightNoWater.value + this.featherFallingLevel);
+        this.maxFallHeightBucket = (int) (Baritone.settings().maxFallHeightBucket.value + this.featherFallingLevel);
         this.frostwalker = EnchantmentHelper.hasFrostWalkerEnchantment(player);
         int depth = EnchantmentHelper.getDepthStriderModifier(player);
         if (depth > 3) { //TODO: Why?
