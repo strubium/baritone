@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 public class PickupCommand extends Command {
 
     public PickupCommand(IBaritone baritone) {
-        super(baritone, "pickup");
+        super(baritone, "pickup", "collect");
     }
 
     @Override
