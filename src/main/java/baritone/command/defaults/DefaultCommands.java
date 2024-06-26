@@ -27,6 +27,9 @@ public final class DefaultCommands {
     private DefaultCommands() {
     }
 
+    /**
+     * Create all of baritone's default commands
+     */
     public static List<ICommand> createAll(IBaritone baritone) {
         Objects.requireNonNull(baritone);
         List<ICommand> commands = new ArrayList<>(Arrays.asList(
@@ -65,6 +68,8 @@ public final class DefaultCommands {
                 new ClickCommand(baritone),
                 new SurfaceCommand(baritone),
                 new ThisWayCommand(baritone),
+                new UpCommand(baritone),
+                new DownCommand(baritone),
                 new WaypointsCommand(baritone),
                 new CommandAlias(baritone, "sethome", "Sets your home waypoint", "waypoints save home"),
                 new CommandAlias(baritone, "home", "Path to your home waypoint", "waypoints goto home"),
