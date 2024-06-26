@@ -42,7 +42,7 @@ public class DownCommand extends Command {
         GoalYLevel goal = new GoalYLevel(targetY);
 
         baritone.getCustomGoalProcess().setGoalAndPath(goal);
-        logDirect(String.format("Goal set to %d blocks up (Y = %d)", blocksDown, targetY));
+        logDirect(String.format("Goal set to %d blocks down (Y = %d)", blocksDown, targetY));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DownCommand extends Command {
     @Override
     public List<String> getLongDesc() {
         return Arrays.asList(
-                "Creates a GoalYLevel some amount of blocks up",
+                "Creates a GoalYLevel some amount of blocks down",
                 "",
                 "Usage:",
                 "> up <distance> - makes a GoalYLevel goal distance blocks in below of you"

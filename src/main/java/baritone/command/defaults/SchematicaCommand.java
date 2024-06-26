@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public class SchematicaCommand extends Command {
 
     public SchematicaCommand(IBaritone baritone) {
-        super(baritone, "schematica");
+        super(baritone, "schematica", "schematic");
     }
 
     @Override
@@ -54,7 +54,8 @@ public class SchematicaCommand extends Command {
                 "Builds the schematic currently open in Schematica.",
                 "",
                 "Usage:",
-                "> schematica"
+                "> schematica",
+                "> schematic"
         );
     }
 }

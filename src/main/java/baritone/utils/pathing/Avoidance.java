@@ -21,6 +21,7 @@ import baritone.Baritone;
 import baritone.api.utils.BetterBlockPos;
 import baritone.api.utils.IPlayerContext;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
@@ -73,12 +74,19 @@ public class Avoidance {
         }
         if (mobCoeff != 1.0D) {
             ctx.world().loadedEntityList.stream()
-                    .filter(entity -> entity instanceof EntityMob)
-                    .filter(entity -> (!(entity instanceof EntitySpider)) || ctx.player().getBrightness() < 0.5)
-                    .filter(entity -> !(entity instanceof EntityPigZombie) || ((EntityPigZombie) entity).isAngry())
-                    .filter(entity -> !(entity instanceof EntityEnderman) || ((EntityEnderman) entity).isScreaming())
+                    // Filter only EntityMob instances or EntityTNTPrimed
+                    .filter(entity -> entity instanceof EntityMob || entity instanceof EntityTNTPrimed)
+                    // Exclude EntitySpider unless player brightness is less than 0.5
+                    .filter(entity -> !(entity instanceof EntitySpider) || ctx.player().getBrightness() < 0.5)
+                    // Include EntityPigZombie if angry, and EntityEnderman if screaming
+                    .filter(entity ->
+                            !(entity instanceof EntityPigZombie) || ((EntityPigZombie) entity).isAngry() ||
+                                    !(entity instanceof EntityEnderman) || ((EntityEnderman) entity).isScreaming()
+                    )
+                    // For each filtered entity, create an Avoidance object and add it to the res list
                     .forEach(entity -> res.add(new Avoidance(new BlockPos(entity), mobCoeff, Baritone.settings().mobAvoidanceRadius.value)));
         }
+
         return res;
     }
 

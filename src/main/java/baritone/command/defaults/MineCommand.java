@@ -24,7 +24,6 @@ import baritone.api.command.argument.IArgConsumer;
 import baritone.api.command.datatypes.ForBlockOptionalMeta;
 import baritone.api.command.exception.CommandException;
 import baritone.api.utils.BlockOptionalMeta;
-import baritone.cache.WorldScanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
