@@ -1139,7 +1139,7 @@ public final class Settings {
      * through a lava lake. This isn't an issue normally since it won't consider anything touching lava, so it just ignores it.
      * However, this setting expands that and allows it to see the entire vein so it'll mine under the lava lake to get the iron that
      * it can reach without mining blocks adjacent to lava. This really defeats the purpose of legitMine since a player could never
-     * do that lol, so thats one reason why its disabled
+     * do that lol, so that's one reason why its disabled
      */
     public final Setting<Boolean> legitMineIncludeDiagonals = new Setting<>(false);
 

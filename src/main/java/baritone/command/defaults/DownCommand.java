@@ -37,7 +37,7 @@ public class DownCommand extends Command {
     public void execute(String label, IArgConsumer args) throws CommandException {
         args.requireExactly(1);
         int blocksDown = args.getAs(Integer.class);
-        int currentY = (int) ctx.playerFeet().y;
+        int currentY = ctx.playerFeet().y;
         int targetY = currentY - blocksDown;
         GoalYLevel goal = new GoalYLevel(targetY);
 

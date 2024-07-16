@@ -66,7 +66,7 @@ public class MovementState {
         public Rotation rotation;
 
         /**
-         * Whether or not this target must force rotations.
+         * Whether this target must force rotations.
          * <p>
          * {@code true} if we're trying to place or break blocks, {@code false} if we're trying to look at the movement location
          */

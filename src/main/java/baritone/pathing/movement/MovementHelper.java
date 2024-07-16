@@ -191,6 +191,12 @@ public interface MovementHelper extends ActionCosts, Helper {
             return canWalkOn(bsi, x, y - 1, z);
         }
 
+        if (block instanceof BlockTorch) {
+            return true;
+        }
+        if (block instanceof BlockRedstoneTorch) {
+            return true;
+        }
         if (block instanceof BlockLiquid) {
             if (isFlowing(x, y, z, state, bsi)) {
                 return false;
@@ -331,8 +337,8 @@ public interface MovementHelper extends ActionCosts, Helper {
             return state.getValue(BlockSnow.LAYERS) == 1;
         }
         if (block instanceof BlockDoublePlant) {
-            BlockDoublePlant.EnumPlantType kek = state.getValue(BlockDoublePlant.VARIANT);
-            return kek == BlockDoublePlant.EnumPlantType.FERN || kek == BlockDoublePlant.EnumPlantType.GRASS;
+            BlockDoublePlant.EnumPlantType plantType = state.getValue(BlockDoublePlant.VARIANT);
+            return plantType == BlockDoublePlant.EnumPlantType.FERN || plantType == BlockDoublePlant.EnumPlantType.GRASS;
         }
         return state.getMaterial().isReplaceable();
     }

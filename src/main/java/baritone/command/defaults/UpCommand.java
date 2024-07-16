@@ -37,7 +37,7 @@ public class UpCommand extends Command {
     public void execute(String label, IArgConsumer args) throws CommandException {
         args.requireExactly(1);
         int blocksUp = args.getAs(Integer.class);
-        int currentY = (int) ctx.playerFeet().y;
+        int currentY = ctx.playerFeet().y;
         int targetY = currentY + blocksUp;
         GoalYLevel goal = new GoalYLevel(targetY);
 
