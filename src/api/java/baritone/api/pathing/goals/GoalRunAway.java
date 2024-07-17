@@ -38,10 +38,24 @@ public class GoalRunAway implements Goal {
 
     private final Integer maintainY;
 
+    /**
+     * Constructs a new GoalRunAway with the specified distance and positions to run away from.
+     *
+     * @param distance the distance to maintain from the specified positions
+     * @param from the positions to run away from
+     */
     public GoalRunAway(double distance, BlockPos... from) {
         this(distance, null, from);
     }
 
+    /**
+     * Constructs a new GoalRunAway with the specified distance, Y level to maintain, and positions to run away from.
+     *
+     * @param distance the distance to maintain from the specified positions
+     * @param maintainY the Y level to maintain while running away
+     * @param from the positions to run away from
+     * @throws IllegalArgumentException if no positions are specified
+     */
     public GoalRunAway(double distance, Integer maintainY, BlockPos... from) {
         if (from.length == 0) {
             throw new IllegalArgumentException();
@@ -67,8 +81,17 @@ public class GoalRunAway implements Goal {
         return true;
     }
 
+    /**
+     * Calculates the heuristic cost to run away from the specified positions.
+     * Mostly copied from {@link GoalBlock}
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param z the z-coordinate
+     * @return the heuristic cost
+     */
     @Override
-    public double heuristic(int x, int y, int z) {// mostly copied from GoalBlock
+    public double heuristic(int x, int y, int z) {
         double min = Double.MAX_VALUE;
         for (BlockPos p : from) {
             double h = GoalXZ.calculate(p.getX() - x, p.getZ() - z);
