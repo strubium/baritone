@@ -194,9 +194,6 @@ public interface MovementHelper extends ActionCosts, Helper {
         if (block instanceof BlockTorch) {
             return true;
         }
-        if (block instanceof BlockRedstoneTorch) {
-            return true;
-        }
         if (block instanceof BlockLiquid) {
             if (isFlowing(x, y, z, state, bsi)) {
                 return false;
@@ -253,7 +250,7 @@ public interface MovementHelper extends ActionCosts, Helper {
     }
 
     /**
-     * canWalkThrough but also won't impede movement at all. so not including doors or fence gates (we'd have to right click),
+     * canWalkThrough but also won't impede movement at all. so not including doors or fence gates (we'd have to right-click),
      * not including water, and not including ladders or vines or cobwebs (they slow us down)
      */
     static boolean fullyPassable(CalculationContext context, int x, int y, int z) {
