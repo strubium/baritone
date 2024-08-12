@@ -34,6 +34,8 @@ public interface ISchematicFormat {
 
     /**
      * @return The parser for creating schematics of this format
+     *
+     * @throws IOException
      */
     IStaticSchematic parse(InputStream input) throws IOException;
 

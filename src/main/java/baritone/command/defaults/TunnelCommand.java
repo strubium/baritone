@@ -86,7 +86,7 @@ public class TunnelCommand extends Command {
                     ctx.player().getHorizontalFacing()
             );
             baritone.getCustomGoalProcess().setGoalAndPath(goal);
-            logDirect(String.format("Goal: %s", goal.toString()));
+            logDirect(String.format("Goal: %s", goal));
         }
     }
 

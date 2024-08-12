@@ -75,6 +75,8 @@ public interface StaticMask extends Mask {
 
     /**
      * Returns a pre-computed mask using {@code this} function, with the specified size parameters.
+     *
+     * @return a pre-computed mask
      */
     default StaticMask compute() {
         return new PreComputedMask(this);
