@@ -44,7 +44,7 @@ public class LitematicaCommand extends Command {
         try {
             baritone.getBuilderProcess().buildOpenLitematic(schematic);
         } catch (IndexOutOfBoundsException e) {
-            logDirect("Pleas provide a valid index.");
+            logDirect("Please provide a valid index.");
         }
     }
 
