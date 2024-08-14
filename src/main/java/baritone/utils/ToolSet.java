@@ -135,6 +135,9 @@ public class ToolSet {
         boolean bestSilkTouch = false;
         int bestFortune = Integer.MIN_VALUE;
         int bestUnbreaking = Integer.MIN_VALUE;
+        int bestLooting = Integer.MIN_VALUE;
+        boolean bestMending = false;
+        int bestEfficiency = Integer.MIN_VALUE;
         IBlockState blockState = b.getDefaultState();
 
         for (int i = 0; i < 9; i++) {
@@ -151,6 +154,9 @@ public class ToolSet {
             boolean silkTouch = hasSilkTouch(itemStack);
             int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack); //See: https://nekoyue.github.io/ForgeJavaDocs-NG/javadoc/1.12.2/
             int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
+            int looting = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, itemStack);
+            boolean mending = EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, itemStack) > 0;
+            int efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack);
 
             if (speed > highestSpeed) {
                 highestSpeed = speed;
@@ -159,6 +165,9 @@ public class ToolSet {
                 bestSilkTouch = silkTouch;
                 bestFortune = fortune;
                 bestUnbreaking = unbreaking;
+                bestMending = mending;
+                bestEfficiency = efficiency;
+                bestLooting = looting;
             } else if (speed == highestSpeed) {
                 int cost = getMaterialCost(itemStack);
 
@@ -168,20 +177,46 @@ public class ToolSet {
                     bestSilkTouch = silkTouch;
                     bestFortune = fortune;
                     bestUnbreaking = unbreaking;
+                    bestMending = mending;
+                    bestEfficiency = efficiency;
+                    bestLooting = looting;
                 } else if (silkTouch == bestSilkTouch) {
                     if (cost < lowestCost) {
                         best = i;
                         lowestCost = cost;
                         bestFortune = fortune;
                         bestUnbreaking = unbreaking;
+                        bestMending = mending;
+                        bestEfficiency = efficiency;
+                        bestLooting = looting;
                     } else if (cost == lowestCost) {
                         if (fortune > bestFortune) {
                             best = i;
                             bestFortune = fortune;
                             bestUnbreaking = unbreaking;
-                        } else if (fortune == bestFortune && unbreaking > bestUnbreaking) {
-                            best = i;
-                            bestUnbreaking = unbreaking;
+                            bestMending = mending;
+                            bestEfficiency = efficiency;
+                            bestLooting = looting;
+                        } else if (fortune == bestFortune) {
+                            if (unbreaking > bestUnbreaking) {
+                                best = i;
+                                bestUnbreaking = unbreaking;
+                                bestMending = mending;
+                                bestEfficiency = efficiency;
+                                bestLooting = looting;
+                            } else if (unbreaking == bestUnbreaking) {
+                                if (efficiency > bestEfficiency) {
+                                    best = i;
+                                    bestEfficiency = efficiency;
+                                    bestMending = mending;
+                                    bestLooting = looting;
+                                } else if (efficiency == bestEfficiency) {
+                                    if (looting > bestLooting) {
+                                        best = i;
+                                        bestLooting = looting;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
