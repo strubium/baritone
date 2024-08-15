@@ -20,6 +20,7 @@ package baritone.api.pathing.goals;
 import baritone.api.utils.BetterBlockPos;
 import baritone.api.utils.SettingsUtil;
 import baritone.api.utils.interfaces.IGoalRenderPos;
+import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 
 

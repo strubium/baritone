@@ -15,31 +15,32 @@ package baritone.api.pathing.goals;/*
  * along with Baritone.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import baritone.api.IBaritone;
 import baritone.api.utils.BetterBlockPos;
+import baritone.api.utils.Rotation;
+import baritone.api.utils.RotationUtils;
 import baritone.api.utils.SettingsUtil;
+import baritone.api.utils.input.Input;
 import baritone.api.utils.interfaces.IGoalRenderPos;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public class GoalPlaceBlock implements Goal, IGoalRenderPos {
 
     public final int x;
     public final int y;
     public final int z;
-    private final ItemStack blockStack;
+    private final Block blockStack;
+    private final IBaritone baritone;
 
-    public GoalPlaceBlock(BlockPos pos, ItemStack blockStack) {
+    public GoalPlaceBlock(BlockPos pos, Block blockStack, IBaritone baritone) {
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
         this.blockStack = blockStack;
+        this.baritone = baritone;
     }
 
     @Override
@@ -49,12 +50,25 @@ public class GoalPlaceBlock implements Goal, IGoalRenderPos {
 
     @Override
     public boolean isInGoal(int x, int y, int z) {
+        // Log the coordinates being checked
+        System.out.println("Checking if player is adjacent to goal at: (" + x + ", " + y + ", " + z + ")");
+
+        // Calculate the distance to the goal
+        BlockPos goalPos = new BlockPos(this.x, this.y, this.z);
+        double distance = goalPos.distanceSq(x, y, z); // Use squared distance for efficiency
+
+        // Log the distance for debugging
+        System.out.println("Distance to goal: " + distance);
+
         // Check if the player is adjacent to the goal block
-        int xDiff = x - this.x;
-        int yDiff = y - this.y;
-        int zDiff = z - this.z;
-        return Math.abs(xDiff) <= 1 && yDiff == 0 && Math.abs(zDiff) <= 1 && !(xDiff == 0 && zDiff == 0);
+        if (x <= this.x & y <= this.y & z <=this.z) {
+            placeBlock(baritone);
+            return true;
+        } else {
+            return false;
+        }
     }
+
 
     @Override
     public double heuristic(int x, int y, int z) {
@@ -94,43 +108,9 @@ public class GoalPlaceBlock implements Goal, IGoalRenderPos {
     }
 
     /**
-     * Determines the best direction to place the block from the player's perspective.
-     *
-     * @param playerPos The player's current position.
-     * @return The direction to face for block placement.
-     */
-    public EnumFacing getPlacementDirection(BlockPos playerPos) {
-        int xDiff = x - playerPos.getX();
-        int yDiff = y - playerPos.getY();
-        int zDiff = z - playerPos.getZ();
-
-        if (Math.abs(xDiff) > Math.abs(zDiff)) {
-            return xDiff > 0 ? EnumFacing.EAST : EnumFacing.WEST;
-        } else {
-            return zDiff > 0 ? EnumFacing.SOUTH : EnumFacing.NORTH;
-        }
-    }
-
-    /**
      * Places the block at the goal position.
      */
-    public void placeBlock(WorldClient world) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        BlockPos pos = getGoalPos();
-        EnumFacing direction = getPlacementDirection(pos);
-        Vec3d hitVec = new Vec3d(0.5, 0.5, 0.5); // Adjust this vector as needed for accurate placement
-
-        // Ensure the player is holding the correct item
-        minecraft.player.inventory.setInventorySlotContents(minecraft.player.inventory.currentItem, blockStack);
-
-        // Place the block
-        minecraft.playerController.processRightClickBlock(
-                minecraft.player,
-                world,
-                pos,
-                direction,
-                hitVec,
-                EnumHand.MAIN_HAND
-        );
+    public void placeBlock(IBaritone baritone) {
+        baritone.getInputOverrideHandler().setInputForceState(Input.CLICK_RIGHT, true);
     }
 }
