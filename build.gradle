@@ -94,6 +94,7 @@ minecraft {
             args '--assetsDir', downloadAssets.output
             args '--assetIndex', '{asset_index}'
             args '--accessToken', 'INVALID'
+            args '--username', 'Drone2342'
 
             args '--tweakClass', 'baritone.launch.BaritoneTweaker'
             jvmArgs "-Dorg.lwjgl.librarypath=${nativesOutput}"
