@@ -84,7 +84,7 @@ public class ToolSet {
      * @param itemStack a possibly empty ItemStack
      * @return values from 0 up
      */
-    private int getMaterialCost(ItemStack itemStack) {
+    private static int getMaterialCost(ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemTool) {
             ItemTool tool = (ItemTool) itemStack.getItem();
             return ((IItemTool) tool).getHarvestLevel();
@@ -93,7 +93,7 @@ public class ToolSet {
         }
     }
 
-    public boolean hasSilkTouch(ItemStack stack) {
+    public static boolean hasSilkTouch(ItemStack stack) {
         return EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
     }
 
@@ -110,119 +110,113 @@ public class ToolSet {
     }
 
     /**
-     * Calculate which tool on the hotbar is best for mining, depending on an override setting,
-     * related to auto tool movement cost, it will either return current selected slot, or the best slot.
+     * Determines the best tool from the hotbar for mining a given block.
      *
-     * @param b the blockstate to be mined
-     * @param preferSilkTouch if true, the function will prioritize tools with silk touch enchantment
-     * @param pathingCalculation if true, the function will return the best tool for the current block,
-     *                           even if auto tool movement is disabled.
-     * @return An int containing the index in the tools array that worked best
+     * @param block The block to be mined.
+     * @param preferSilkTouch If true, prioritizes tools with Silk Touch.
+     * @param pathingCalculation If true, selects the best tool even when auto-tool movement is disabled.
+     * @return The index of the best tool in the hotbar.
      */
-    public int getBestSlot(Block b, boolean preferSilkTouch, boolean pathingCalculation) {
-
-    /*
-    If we actually want to know what efficiency our held item has instead of the best one
-    possible, this lets us make pathing depend on the actual tool to be used (if auto tool is disabled)
-    */
+    public int getBestSlot(Block block, boolean preferSilkTouch, boolean pathingCalculation) {
         if (!Baritone.settings().autoTool.value && pathingCalculation) {
             return player.inventory.currentItem;
         }
 
-        int best = 0;
-        double highestSpeed = Double.NEGATIVE_INFINITY;
-        int lowestCost = Integer.MAX_VALUE;
-        boolean bestSilkTouch = false;
-        int bestFortune = Integer.MIN_VALUE;
-        int bestUnbreaking = Integer.MIN_VALUE;
-        int bestLooting = Integer.MIN_VALUE;
-        boolean bestMending = false;
-        int bestEfficiency = Integer.MIN_VALUE;
-        IBlockState blockState = b.getDefaultState();
+        int bestSlot = 0;
+        double maxSpeed = Double.NEGATIVE_INFINITY;
+        int minCost = Integer.MAX_VALUE;
+
+        ToolAttributes bestTool = new ToolAttributes();
+
+        IBlockState blockState = block.getDefaultState();
 
         for (int i = 0; i < 9; i++) {
             ItemStack itemStack = player.inventory.getStackInSlot(i);
-            if (!Baritone.settings().useSwordToMine.value && itemStack.getItem() instanceof ItemSword) {
+
+            if (shouldSkipTool(itemStack)) {
                 continue;
             }
 
-            if (Baritone.settings().itemSaver.value && (itemStack.getItemDamage() + Baritone.settings().itemSaverThreshold.value) >= itemStack.getMaxDamage() && itemStack.getMaxDamage() > 1) {
-                continue;
+            ToolAttributes currentTool = new ToolAttributes(itemStack, blockState);
+
+            if (isBetterTool(currentTool, bestTool, preferSilkTouch, minCost)) {
+                bestSlot = i;
+                bestTool = currentTool;
+                minCost = bestTool.materialCost;
             }
+        }
 
-            double speed = calculateSpeedVsBlock(itemStack, blockState);
-            boolean silkTouch = hasSilkTouch(itemStack);
-            int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack); //See: https://nekoyue.github.io/ForgeJavaDocs-NG/javadoc/1.12.2/
-            int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
-            int looting = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, itemStack);
-            boolean mending = EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, itemStack) > 0;
-            int efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack);
+        return bestSlot;
+    }
 
-            if (speed > highestSpeed) {
-                highestSpeed = speed;
-                best = i;
-                lowestCost = getMaterialCost(itemStack);
-                bestSilkTouch = silkTouch;
-                bestFortune = fortune;
-                bestUnbreaking = unbreaking;
-                bestMending = mending;
-                bestEfficiency = efficiency;
-                bestLooting = looting;
-            } else if (speed == highestSpeed) {
-                int cost = getMaterialCost(itemStack);
+    /**
+     * Determines if a tool should be skipped based on settings.
+     */
+    private boolean shouldSkipTool(ItemStack itemStack) {
+        return (!Baritone.settings().useSwordToMine.value && itemStack.getItem() instanceof ItemSword) ||
+                (Baritone.settings().itemSaver.value && isToolNearBreaking(itemStack));
+    }
 
-                if (preferSilkTouch && !bestSilkTouch && silkTouch) {
-                    best = i;
-                    lowestCost = cost;
-                    bestSilkTouch = silkTouch;
-                    bestFortune = fortune;
-                    bestUnbreaking = unbreaking;
-                    bestMending = mending;
-                    bestEfficiency = efficiency;
-                    bestLooting = looting;
-                } else if (silkTouch == bestSilkTouch) {
-                    if (cost < lowestCost) {
-                        best = i;
-                        lowestCost = cost;
-                        bestFortune = fortune;
-                        bestUnbreaking = unbreaking;
-                        bestMending = mending;
-                        bestEfficiency = efficiency;
-                        bestLooting = looting;
-                    } else if (cost == lowestCost) {
-                        if (fortune > bestFortune) {
-                            best = i;
-                            bestFortune = fortune;
-                            bestUnbreaking = unbreaking;
-                            bestMending = mending;
-                            bestEfficiency = efficiency;
-                            bestLooting = looting;
-                        } else if (fortune == bestFortune) {
-                            if (unbreaking > bestUnbreaking) {
-                                best = i;
-                                bestUnbreaking = unbreaking;
-                                bestMending = mending;
-                                bestEfficiency = efficiency;
-                                bestLooting = looting;
-                            } else if (unbreaking == bestUnbreaking) {
-                                if (efficiency > bestEfficiency) {
-                                    best = i;
-                                    bestEfficiency = efficiency;
-                                    bestMending = mending;
-                                    bestLooting = looting;
-                                } else if (efficiency == bestEfficiency) {
-                                    if (looting > bestLooting) {
-                                        best = i;
-                                        bestLooting = looting;
-                                    }
-                                }
-                            }
-                        }
-                    }
+    /**
+     * Checks if a tool is near breaking according to item saver settings.
+     */
+    private boolean isToolNearBreaking(ItemStack itemStack) {
+        return (itemStack.getItemDamage() + Baritone.settings().itemSaverThreshold.value) >= itemStack.getMaxDamage() &&
+                itemStack.getMaxDamage() > 1;
+    }
+
+    /**
+     * Determines if the current tool is a better choice than the best tool found so far.
+     */
+    private boolean isBetterTool(ToolAttributes current, ToolAttributes best, boolean preferSilkTouch, int minCost) {
+        if (current.speed > best.speed) {
+            return true;
+        } else if (current.speed == best.speed) {
+            if (preferSilkTouch && !best.silkTouch && current.silkTouch) {
+                return true;
+            } else if (current.silkTouch == best.silkTouch) {
+                if (current.materialCost < minCost) {
+                    return true;
+                } else if (current.materialCost == minCost) {
+                    return current.hasBetterEnchantmentsThan(best);
                 }
             }
         }
-        return best;
+        return false;
+    }
+
+    /**
+     * Helper class to store tool attributes.
+     */
+    private static class ToolAttributes {
+        double speed;
+        int materialCost;
+        boolean silkTouch;
+        int fortune, unbreaking, efficiency, looting;
+        boolean mending;
+
+        ToolAttributes() {
+            this.speed = Double.NEGATIVE_INFINITY;
+            this.materialCost = Integer.MAX_VALUE;
+        }
+
+        ToolAttributes(ItemStack itemStack, IBlockState blockState) {
+            this.speed = calculateSpeedVsBlock(itemStack, blockState);
+            this.materialCost = getMaterialCost(itemStack);
+            this.silkTouch = hasSilkTouch(itemStack);
+            this.fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack);
+            this.unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, itemStack);
+            this.efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack);
+            this.looting = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, itemStack);
+            this.mending = EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, itemStack) > 0;
+        }
+
+        boolean hasBetterEnchantmentsThan(ToolAttributes other) {
+            if (this.fortune != other.fortune) return this.fortune > other.fortune;
+            if (this.unbreaking != other.unbreaking) return this.unbreaking > other.unbreaking;
+            if (this.efficiency != other.efficiency) return this.efficiency > other.efficiency;
+            return this.looting > other.looting;
+        }
     }
 
     /**
